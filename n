@@ -1,0 +1,12 @@
+from crud_functions import initiate_db, get_all_products
+initiate_db()
+@dp.message_handler(text='Купить')
+async def get_buying_list(message: types.Message):
+    products = get_all_products()
+    for product in products:
+        await message.answer(f'Название: {product[1]} | Описание: {product[2]} | Цена: {product[3]}')
+        await message.answer_photo(f'product{product[0]}.jpg')
+    keyboard = InlineKeyboardMarkup()
+    for product in products:
+        keyboard.add(InlineKeyboardButton(text=product[1], callback_data=f'product_buying:{product[0]}'))
+    await message.answer('Выберите продукт для покупки:', reply_markup=keyboard)
